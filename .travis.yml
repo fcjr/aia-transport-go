@@ -14,7 +14,7 @@ os:
 matrix:
   allow_failures:	
     - go: tip
-    - os: windows
+      os: windows
 
 before_script:
   - go vet ./...
