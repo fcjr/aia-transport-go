@@ -1,7 +1,7 @@
-# AIA (Authority Information Access) Transport GO
+# AIA (Authority Information Access) Transport Go
 [![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Go Report Card][report-card-img]][report-card] [![Coverage Status][cov-img]][cov]
 
-AIA-Transport-Go provides an http.Transport which use the AIA (Authority Information Access) X.509 extension to resolve incomplete certificate chains during the tls handshake. See [rfc3280](https://tools.ietf.org/html/rfc3280#section-4.2.2.1) for more details.
+AIA-Transport-Go provides an http.Transport which uses the AIA (Authority Information Access) X.509 extension to resolve incomplete certificate chains during the tls handshake. See [rfc3280](https://tools.ietf.org/html/rfc3280#section-4.2.2.1) for more details.
 
 ## Installation
 
@@ -17,7 +17,7 @@ if err != nil {
     log.Fatal(err)
 }
 client := http.Client{
-    Transport := tr
+    Transport: tr,
 }
 res, err := client.Get("https://incomplete-chain.badssl.com/")
 if err != nil {
