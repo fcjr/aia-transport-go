@@ -1,4 +1,5 @@
-# AIA (Authority Information Access) Transport GO [![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov]
+# AIA (Authority Information Access) Transport GO
+[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov]
 
 AIA-Transport-Go provides a an http.Transport which ues the AIA (Authority Information Access) certificate extension to resolve incomplete certificate chains during the tls handshake.
 
