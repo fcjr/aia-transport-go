@@ -3,12 +3,17 @@ sudo: false
 
 go:
   - "1.13.x"
+  - "1.x"
   - tip
 
 os:
 - linux
 - osx
 - windows
+
+allow_failures:	
+  - go: tip
+  - os: windows
 
 before_script:
   - go vet ./...
