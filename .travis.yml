@@ -11,9 +11,10 @@ os:
 - osx
 - windows
 
-allow_failures:	
-  - go: tip
-  - os: windows
+matrix:
+  allow_failures:	
+    - go: tip
+    - os: windows
 
 before_script:
   - go vet ./...
