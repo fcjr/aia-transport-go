@@ -1,7 +1,7 @@
 # AIA (Authority Information Access) Transport GO
-[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov]
+[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov] [![Go Report Card][report-card-img]][report-card]
 
-AIA-Transport-Go provides a an http.Transport which ues the AIA (Authority Information Access) certificate extension to resolve incomplete certificate chains during the tls handshake.
+AIA-Transport-Go provides an http.Transport which ues the AIA (Authority Information Access) certificate extension to resolve incomplete certificate chains during the tls handshake.
 
 ## Installation
 
@@ -32,3 +32,5 @@ fmt.Println(res.Status)
 [ci]: https://travis-ci.com/fcjr/aia-transport-go
 [cov-img]: https://codecov.io/gh/fcjr/aia-transport-go/branch/master/graph/badge.svg
 [cov]: https://codecov.io/gh/fcjr/aia-transport-go
+[report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
+[report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go

@@ -104,7 +104,7 @@ func Test_Transport(t *testing.T) {
 			t.Log(err.Error())
 		}
 		if err == nil && tc.ErrExpected {
-			t.Errorf("%s: expected error but request succeded!", tc.URL)
+			t.Errorf("%s: expected error but request succeeded!", tc.URL)
 		}
 	}
 }
