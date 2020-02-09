@@ -26,6 +26,17 @@ if err != nil {
 fmt.Println(res.Status)
 ```
 
+## Todos
+
+* [X] Follow single incomplete AIA chain
+* [X] Tests
+* [X] CI & Code Coverage
+* [X] Documentation
+* [ ] Chain Caching
+* [ ] Certificate Caching
+* [ ] Follow all possible issuing urls
+* [ ] Benchmarks
+
 ## Caveats
 
 This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x509/#SystemCertPool) to gather the initial system root certificates to validate against.  This function is not implemented on windows, however windows will resolve incomplete certificate chains via AIA automatically so this library simply returns a default http.Transport on windows which should be sufficient.[^1]
