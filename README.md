@@ -32,7 +32,7 @@ fmt.Println(res.Status)
 * [X] Tests
 * [X] CI & Code Coverage
 * [X] Documentation
-* [ ] Chain Caching
+* [X] Chain Caching
 * [ ] Certificate Caching
 * [ ] Follow all possible issuing urls
 * [ ] Benchmarks

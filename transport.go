@@ -57,7 +57,7 @@ func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 		certs[i] = cert
 	}
 
-	opts := x509.VerifyOptions{
+	opts := &x509.VerifyOptions{
 		Roots:         rootCAs,
 		CurrentTime:   time.Now(),
 		DNSName:       serverName,
@@ -67,29 +67,50 @@ func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 		opts.Intermediates.AddCert(cert)
 	}
 
-	_, err := certs[0].Verify(opts)
+	_, err := certs[0].Verify(*opts)
 	if err != nil {
 		if _, ok := err.(x509.UnknownAuthorityError); ok {
 			lastCert := certs[len(certs)-1]
 			if len(lastCert.IssuingCertificateURL) >= 1 && lastCert.IssuingCertificateURL[0] != "" {
-				resp, err := http.Get(lastCert.IssuingCertificateURL[0])
-				if resp != nil {
-					defer resp.Body.Close()
-				}
-				if err != nil {
-					return err
-				}
-
-				data, err := ioutil.ReadAll(resp.Body)
-				if err != nil {
-					return err
-				}
-
-				rawCerts = append(rawCerts, data)
-				return verifyPeerCerts(rootCAs, serverName, rawCerts)
+				return verifyIncompleteChain(lastCert.IssuingCertificateURL[0], certs[0], opts)
 			}
 		}
 		return err
 	}
 	return nil
+}
+
+func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certificate, opts *x509.VerifyOptions) error {
+	issuer, err := getCert(issuingCertificateURL)
+	if err != nil {
+		return err
+	}
+	opts.Intermediates.AddCert(issuer)
+	_, err = baseCert.Verify(*opts)
+	if err != nil {
+		if _, ok := err.(x509.UnknownAuthorityError); ok {
+			if len(issuer.IssuingCertificateURL) > 1 && issuer.IssuingCertificateURL[0] != "" {
+				return verifyIncompleteChain(issuer.IssuingCertificateURL[0], baseCert, opts)
+			}
+		}
+		return err
+	}
+	return nil
+}
+
+func getCert(url string) (*x509.Certificate, error) {
+	resp, err := http.Get(url)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return x509.ParseCertificate(data)
 }
