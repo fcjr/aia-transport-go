@@ -7,7 +7,7 @@ import (
 	"github.com/fcjr/aia-transport-go"
 )
 
-func Test_Transport(t *testing.T) {
+func TestTransport(t *testing.T) {
 	// test against badssl.com
 	testCases := []struct {
 		URL         string
