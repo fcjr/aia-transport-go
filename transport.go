@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"runtime"
@@ -26,7 +27,11 @@ func NewTransport() (*http.Transport, error) {
 	}
 
 	return &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs: rootCAs,
+		},
 		DialTLS: func(network, addr string) (net.Conn, error) {
+			log.Println("dialing: ", addr)
 			conn, err := tls.Dial(network, addr, &tls.Config{
 				InsecureSkipVerify: true,
 				ServerName:         addr,
@@ -89,7 +94,7 @@ func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certific
 	_, err = baseCert.Verify(*opts)
 	if err != nil {
 		if _, ok := err.(x509.UnknownAuthorityError); ok {
-			if len(issuer.IssuingCertificateURL) > 1 && issuer.IssuingCertificateURL[0] != "" {
+			if len(issuer.IssuingCertificateURL) >= 1 && issuer.IssuingCertificateURL[0] != "" {
 				return verifyIncompleteChain(issuer.IssuingCertificateURL[0], baseCert, opts)
 			}
 		}
