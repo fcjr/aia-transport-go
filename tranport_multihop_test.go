@@ -14,6 +14,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -77,9 +78,9 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	
+
 	// fake out windows to allow test to pass
-	if runtime.GOOS = "windows" {
+	if runtime.GOOS == "windows" {
 		winRoots := x509.NewCertPool()
 		winRoots.AppendCertsFromPEM(caPEM.Bytes())
 		aiaTr.TLSClientConfig = &tls.Config{
