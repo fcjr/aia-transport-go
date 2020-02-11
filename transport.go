@@ -5,7 +5,6 @@ import (
 	"crypto/x509"
 	"errors"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
 	"runtime"
@@ -31,7 +30,6 @@ func NewTransport() (*http.Transport, error) {
 			RootCAs: rootCAs,
 		},
 		DialTLS: func(network, addr string) (net.Conn, error) {
-			log.Println("dialing: ", addr)
 			conn, err := tls.Dial(network, addr, &tls.Config{
 				InsecureSkipVerify: true,
 				ServerName:         addr,
