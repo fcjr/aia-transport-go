@@ -31,7 +31,7 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := strings.TrimPrefix(r.URL.Path, "/")
 		if certBytes, ok := certs[path]; ok {
-			w.Write(certBytes)
+			_, _ = w.Write(certBytes)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -48,7 +48,10 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 	parent := ca
 	parentPriv := caPrivKey
 	issuer := ""
-	intermediates := []*x509.Certificate{}
+
+	// TODO for later use in more tests
+	// intermediates := []*x509.Certificate{}
+
 	for i := 0; i < 5; i++ {
 		var certBytes []byte
 		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, issuer)
@@ -57,7 +60,9 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 		}
 		certs[strconv.Itoa(i)] = certBytes
 		issuer = httpServer.URL + "/" + strconv.Itoa(i)
-		intermediates = append([]*x509.Certificate{parent}, intermediates...)
+
+		// TODO for later use in more tests
+		// intermediates = append([]*x509.Certificate{parent}, intermediates...)
 	}
 
 	serverCert, serverPrivKey, err := genLeafCertificate(parent, parentPriv, issuer, net.IPv4(127, 0, 0, 1))
@@ -117,16 +122,23 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 
 func genTLSChain(leafCert *x509.Certificate, leafCertPrivKey *rsa.PrivateKey, intermediates ...*x509.Certificate) (*tls.Certificate, error) {
 	leafCertPEM := new(bytes.Buffer)
-	pem.Encode(leafCertPEM, &pem.Block{
+	err := pem.Encode(leafCertPEM, &pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: leafCert.Raw,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	leafCertPrivKeyPEM := new(bytes.Buffer)
-	pem.Encode(leafCertPrivKeyPEM, &pem.Block{
+	err = pem.Encode(leafCertPrivKeyPEM, &pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(leafCertPrivKey),
 	})
+	if err != nil {
+		return nil, err
+	}
+
 	tlsCert, err := tls.X509KeyPair(leafCertPEM.Bytes(), leafCertPrivKeyPEM.Bytes())
 	if err != nil {
 		return nil, err
@@ -239,16 +251,23 @@ func genRootCA() (ca *x509.Certificate, caCert tls.Certificate, caPEM *bytes.Buf
 		return nil, tls.Certificate{}, &bytes.Buffer{}, nil, err
 	}
 	caPEM = new(bytes.Buffer)
-	pem.Encode(caPEM, &pem.Block{
+	err = pem.Encode(caPEM, &pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: caBytes,
 	})
+	if err != nil {
+		return nil, tls.Certificate{}, &bytes.Buffer{}, nil, err
+	}
 
 	caPrivKeyPEM := new(bytes.Buffer)
-	pem.Encode(caPrivKeyPEM, &pem.Block{
+	err = pem.Encode(caPrivKeyPEM, &pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(caPrivKey),
 	})
+	if err != nil {
+		return nil, tls.Certificate{}, &bytes.Buffer{}, nil, err
+	}
+
 	caCert, err = tls.X509KeyPair(caPEM.Bytes(), caPrivKeyPEM.Bytes())
 	if err != nil {
 		return nil, tls.Certificate{}, &bytes.Buffer{}, nil, err
