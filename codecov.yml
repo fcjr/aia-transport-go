@@ -1,0 +1,9 @@
+coverage:
+  range: 60..80
+  status:
+    project:
+      default:
+        threshold: 1 # check will fail if coverage drops >1%
+    patch:
+      default:
+        threshold: 1 # check will fail if coverage drops >1%
