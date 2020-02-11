@@ -1,5 +1,5 @@
 # AIA (Authority Information Access) Transport Go
-[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Go Report Card][report-card-img]][report-card] [![Coverage Status][cov-img]][cov]
+[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Go Report Card][report-card-img]][report-card] [![Coverage Status][cov-img]][cov] [![GolangCI][golangci-img]][golangci]
 
 AIA-Transport-Go provides an http.Transport which uses the AIA (Authority Information Access) X.509 extension to resolve incomplete certificate chains during the tls handshake. See [rfc3280](https://tools.ietf.org/html/rfc3280#section-4.2.2.1) for more details.
 
@@ -51,3 +51,5 @@ This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x50
 [cov]: https://codecov.io/gh/fcjr/aia-transport-go
 [report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
 [report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go
+[golangci-img]: https://golangci.com/r/github.com/fcjr/aia-transport-go.svg
+[golangci]: https://golangci.com/r/github.com/fcjr/aia-transport-go
