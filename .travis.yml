@@ -1,5 +1,4 @@
 language: go
-sudo: false
 
 go:
   - "1.13.x"
@@ -10,11 +9,6 @@ os:
 - linux
 - osx
 - windows
-
-# matrix:
-#   allow_failures:	
-#     - go: tip
-#       os: windows
 
 before_install:
   - go get -t -v ./...
