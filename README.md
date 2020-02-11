@@ -51,5 +51,5 @@ This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x50
 [cov]: https://codecov.io/gh/fcjr/aia-transport-go
 [report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
 [report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go
-[golangci-img]: https://golangci.com/r/github.com/fcjr/aia-transport-go.svg
+[golangci-img]: https://golangci.com/badges/github.com/fcjr/aia-transport-go.svg
 [golangci]: https://golangci.com/r/github.com/fcjr/aia-transport-go
