@@ -32,7 +32,6 @@ func NewTransport() (*http.Transport, error) {
 		DialTLS: func(network, addr string) (net.Conn, error) {
 			conn, err := tls.Dial(network, addr, &tls.Config{
 				InsecureSkipVerify: true,
-				ServerName:         addr,
 				RootCAs:            rootCAs,
 				VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
 					serverName, _, err := net.SplitHostPort(addr)
