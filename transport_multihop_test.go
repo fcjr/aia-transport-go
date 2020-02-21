@@ -36,7 +36,7 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{ "path" : "%s" }`, path)
+		_, _ = fmt.Fprintf(w, `{ "path" : "%s" }`, path)
 	})
 	tlsServer := httptest.NewUnstartedServer(handler)
 	httpServer := httptest.NewServer(handler)
