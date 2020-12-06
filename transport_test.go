@@ -87,6 +87,10 @@ func TestTransport(t *testing.T) {
 			URL:         "https://tls-v1-2.badssl.com:1012/",
 			ErrExpected: false,
 		},
+		{
+			URL:         "https://www.musl-libc.org/",
+			ErrExpected: false,
+		},
 	}
 	tr, err := aia.NewTransport()
 	if err != nil {

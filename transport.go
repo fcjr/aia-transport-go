@@ -72,9 +72,8 @@ func verifyPeerCerts(rootCAs *x509.CertPool, serverName string, rawCerts [][]byt
 	_, err := certs[0].Verify(*opts)
 	if err != nil {
 		if _, ok := err.(x509.UnknownAuthorityError); ok {
-			lastCert := certs[len(certs)-1]
-			if len(lastCert.IssuingCertificateURL) >= 1 && lastCert.IssuingCertificateURL[0] != "" {
-				return verifyIncompleteChain(lastCert.IssuingCertificateURL[0], certs[0], opts)
+			if len(certs[0].IssuingCertificateURL) >= 1 && certs[0].IssuingCertificateURL[0] != "" {
+				return verifyIncompleteChain(certs[0].IssuingCertificateURL[0], certs[0], opts)
 			}
 		}
 		return err
