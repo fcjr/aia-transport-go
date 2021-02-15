@@ -1,5 +1,5 @@
 # AIA (Authority Information Access) Transport Go
-[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Go Report Card][report-card-img]][report-card] [![GolangCI][golangci-img]][golangci] [![Coverage Status][cov-img]][cov]
+[![GoDoc][doc-img]][doc] [![Build Status][ci-img]][ci] [![Go Report Card][report-card-img]][report-card] [![GolangCI][golangci-lint-img]][golangci-lint] [![Coverage Status][cov-img]][cov]
 
 AIA-Transport-Go provides an http.Transport which uses the AIA (Authority Information Access) X.509 extension to resolve incomplete certificate chains during the tls handshake. See [rfc3280](https://tools.ietf.org/html/rfc3280#section-4.2.2.1) for more details.
 
@@ -49,7 +49,7 @@ This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x50
 [ci]: https://travis-ci.org/fcjr/aia-transport-go
 [report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
 [report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go
-[golangci-img]: https://golangci.com/badges/github.com/fcjr/aia-transport-go.svg
-[golangci]: https://golangci.com/r/github.com/fcjr/aia-transport-go
+[golangci-lint-img]: https://github.com/fcjr/aia-transport-go/workflows/golangci-lint/badge.svg
+[golangci-lint]: https://github.com/fcjr/aia-transport-go/actions?query=workflow%3Agolangci-lint
 [cov-img]: https://codecov.io/gh/fcjr/aia-transport-go/branch/master/graph/badge.svg
 [cov]: https://codecov.io/gh/fcjr/aia-transport-go
