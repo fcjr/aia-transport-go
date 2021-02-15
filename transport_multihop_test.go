@@ -52,7 +52,7 @@ func TestTransport_multiHopSemicompleteChain(t *testing.T) {
 
 	for i := 0; i < 5; i++ {
 		var certBytes []byte
-		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, issuer)
+		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, fmt.Sprintf("AIA Intermediate Cert %d", i), issuer)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -146,7 +146,7 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 
 	for i := 0; i < 5; i++ {
 		var certBytes []byte
-		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, issuer)
+		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, "AIA Intermediate Cert", issuer)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -280,11 +280,11 @@ func genLeafCertificate(parent *x509.Certificate, parentPrivKey *rsa.PrivateKey,
 	return serverCert, certPrivKey, err
 }
 
-func genIntermediate(parent *x509.Certificate, parentPrivKey *rsa.PrivateKey, issuingURL string) (*x509.Certificate, []byte, *rsa.PrivateKey, error) {
+func genIntermediate(parent *x509.Certificate, parentPrivKey *rsa.PrivateKey, orgName, issuingURL string) (*x509.Certificate, []byte, *rsa.PrivateKey, error) {
 	cert := &x509.Certificate{
 		SerialNumber: big.NewInt(1658),
 		Subject: pkix.Name{
-			Organization:  []string{"AIA Intermediate Cert"},
+			Organization:  []string{orgName},
 			Country:       []string{"US"},
 			Province:      []string{""},
 			Locality:      []string{"New York"},
