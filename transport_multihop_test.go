@@ -24,6 +24,98 @@ import (
 	"github.com/fcjr/aia-transport-go"
 )
 
+func TestTransport_multiHopSemicompleteChain(t *testing.T) {
+	certs := map[string][]byte{}
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := strings.TrimPrefix(r.URL.Path, "/")
+		if certBytes, ok := certs[path]; ok {
+			_, _ = w.Write(certBytes)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = fmt.Fprintf(w, `{ "path" : "%s" }`, path)
+	})
+	tlsServer := httptest.NewUnstartedServer(handler)
+	httpServer := httptest.NewServer(handler)
+
+	ca, _, caPEM, caPrivKey, err := genRootCA()
+	if err != nil {
+		t.Fatal(err)
+	}
+	parent := ca
+	parentPriv := caPrivKey
+	issuer := ""
+
+	intermediates := []*x509.Certificate{}
+
+	for i := 0; i < 5; i++ {
+		var certBytes []byte
+		parent, certBytes, parentPriv, err = genIntermediate(parent, parentPriv, issuer)
+		if err != nil {
+			t.Fatal(err)
+		}
+		certs[strconv.Itoa(i)] = certBytes
+		issuer = httpServer.URL + "/" + strconv.Itoa(i)
+
+		intermediates = append([]*x509.Certificate{parent}, intermediates...)
+	}
+
+	serverCert, serverPrivKey, err := genLeafCertificate(parent, parentPriv, issuer, net.IPv4(127, 0, 0, 1))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tlsCert, err := genTLSChain(serverCert, serverPrivKey, intermediates[0], intermediates[1])
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tlsServer.TLS = &tls.Config{
+		Certificates: []tls.Certificate{*tlsCert},
+	}
+	tlsServer.StartTLS()
+
+	aiaTr, err := aia.NewTransport()
+	if err != nil {
+		t.Fatal(err)
+	}
+	aiaTr.TLSClientConfig.RootCAs.AppendCertsFromPEM(caPEM.Bytes())
+
+	client := http.Client{
+		Transport: aiaTr,
+	}
+
+	testCases := []struct {
+		URL         string
+		ErrExpected bool
+	}{
+		{
+			URL:         tlsServer.URL + "/multiple-intermediates",
+			ErrExpected: false,
+		},
+	}
+	for _, tc := range testCases {
+		res, err := client.Get(tc.URL)
+		if err != nil && !tc.ErrExpected {
+			t.Errorf("%s: err not expected but got: %s", tc.URL, err.Error())
+		}
+		if err == nil && tc.ErrExpected {
+			t.Errorf("%s: expected error but request succeeded!", tc.URL)
+		}
+		if err == nil && res.Body != nil {
+			defer res.Body.Close()
+			b, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				t.Log(err)
+			} else {
+				t.Logf(string(b))
+			}
+		}
+	}
+}
+
 func TestTransport_multiHopIncompleteChain(t *testing.T) {
 
 	certs := map[string][]byte{}
