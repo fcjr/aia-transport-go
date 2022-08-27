@@ -1,3 +1,4 @@
+//go:build !windows
 // +build !windows
 
 package aia_test
@@ -11,7 +12,7 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/big"
 	"net"
 	"net/http"
@@ -105,7 +106,7 @@ func TestTransport_multiHopSemicompleteChainEnd(t *testing.T) {
 		}
 		if err == nil && res.Body != nil {
 			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
@@ -197,7 +198,7 @@ func TestTransport_multiHopSemicompleteChainBeginning(t *testing.T) {
 		}
 		if err == nil && res.Body != nil {
 			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
@@ -292,7 +293,7 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 		}
 		if err == nil && res.Body != nil {
 			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
