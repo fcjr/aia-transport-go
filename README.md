@@ -37,12 +37,6 @@ fmt.Println(res.Status)
 * [ ] Follow all possible issuing urls
 * [ ] Benchmarks
 
-## Caveats
-
-This library relies on [x509.SystemCertPool()](https://golang.org/pkg/crypto/x509/#SystemCertPool) to gather the initial system root certificates to validate against.  This function is not implemented on windows, however windows will resolve incomplete certificate chains via AIA automatically so this library simply returns a default http.Transport on windows which should be sufficient.[^1]
-
-[^1]: https://github.com/golang/go/issues/31773#issuecomment-582176197
-
 [doc-img]: https://img.shields.io/static/v1?label=godoc&message=reference&color=blue
 [doc]: https://pkg.go.dev/github.com/fcjr/aia-transport-go?tab=doc
 [ci-img]: https://travis-ci.org/fcjr/aia-transport-go.svg?branch=master

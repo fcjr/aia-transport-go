@@ -4,21 +4,15 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
-	"runtime"
 	"time"
 )
 
 // NewTransport returns a http.Transport that supports AIA (Authority Information Access) resolution
 // for incomplete certificate chains.
 func NewTransport() (*http.Transport, error) {
-
-	// Support windows.
-	if runtime.GOOS == "windows" {
-		return &http.Transport{}, nil
-	}
 
 	rootCAs, err := x509.SystemCertPool()
 	if err != nil {
@@ -30,7 +24,7 @@ func NewTransport() (*http.Transport, error) {
 			RootCAs: rootCAs,
 		},
 		DialTLS: func(network, addr string) (net.Conn, error) {
-			conn, err := tls.Dial(network, addr, &tls.Config{
+			return tls.Dial(network, addr, &tls.Config{
 				InsecureSkipVerify: true,
 				RootCAs:            rootCAs,
 				VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
@@ -41,10 +35,6 @@ func NewTransport() (*http.Transport, error) {
 					return verifyPeerCerts(rootCAs, serverName, rawCerts)
 				},
 			})
-			if err != nil {
-				return conn, err
-			}
-			return conn, nil
 		},
 	}, nil
 }
@@ -108,7 +98,7 @@ func getCert(url string) (*x509.Certificate, error) {
 		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
