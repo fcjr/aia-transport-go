@@ -41,5 +41,5 @@ fmt.Println(res.Status)
 [doc]: https://pkg.go.dev/github.com/fcjr/aia-transport-go?tab=doc
 [report-card-img]: https://goreportcard.com/badge/github.com/fcjr/aia-transport-go
 [report-card]: https://goreportcard.com/report/github.com/fcjr/aia-transport-go
-[lint-img]: https://github.com/fcjr/aia-transport-go/workflows/lint/badge.svg
+[lint-img]: https://github.com/fcjr/aia-transport-go/actions/workflows/test.yml/badge.svg
 [lint]: https://github.com/fcjr/aia-transport-go/actions?query=workflow%3Alint
