@@ -4,22 +4,15 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
-	"runtime"
 	"time"
 )
 
 // NewTransport returns a http.Transport that supports AIA (Authority Information Access) resolution
 // for incomplete certificate chains.
 func NewTransport() (*http.Transport, error) {
-
-	// Support windows.
-	if runtime.GOOS == "windows" {
-		return &http.Transport{}, nil
-	}
-
 	rootCAs, err := x509.SystemCertPool()
 	if err != nil {
 		return nil, err
@@ -102,13 +95,15 @@ func verifyIncompleteChain(issuingCertificateURL string, baseCert *x509.Certific
 func getCert(url string) (*x509.Certificate, error) {
 	resp, err := http.Get(url)
 	if resp != nil {
-		defer resp.Body.Close()
+		defer func() {
+			_ = resp.Body.Close()
+		}()
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

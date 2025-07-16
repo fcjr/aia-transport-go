@@ -1,5 +1,3 @@
-// +build !windows
-
 package aia_test
 
 import (
@@ -11,7 +9,7 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/big"
 	"net"
 	"net/http"
@@ -104,12 +102,14 @@ func TestTransport_multiHopSemicompleteChainEnd(t *testing.T) {
 			t.Errorf("%s: expected error but request succeeded!", tc.URL)
 		}
 		if err == nil && res.Body != nil {
-			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			defer func() {
+				_ = res.Body.Close()
+			}()
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
-				t.Logf(string(b))
+				t.Log(string(b))
 			}
 		}
 	}
@@ -196,12 +196,14 @@ func TestTransport_multiHopSemicompleteChainBeginning(t *testing.T) {
 			t.Errorf("%s: expected error but request succeeded!", tc.URL)
 		}
 		if err == nil && res.Body != nil {
-			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			defer func() {
+				_ = res.Body.Close()
+			}()
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
-				t.Logf(string(b))
+				t.Log(string(b))
 			}
 		}
 	}
@@ -291,12 +293,14 @@ func TestTransport_multiHopIncompleteChain(t *testing.T) {
 			t.Errorf("%s: expected error but request succeeded!", tc.URL)
 		}
 		if err == nil && res.Body != nil {
-			defer res.Body.Close()
-			b, err := ioutil.ReadAll(res.Body)
+			defer func() {
+				_ = res.Body.Close()
+			}()
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Log(err)
 			} else {
-				t.Logf(string(b))
+				t.Log(string(b))
 			}
 		}
 	}
